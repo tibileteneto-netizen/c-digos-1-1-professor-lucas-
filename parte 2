@@ -1,0 +1,45 @@
+-- Criando a tabela de Times (se ainda não existir)
+CREATE TABLE Times (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cidade VARCHAR(100),
+    ano_fundacao INT
+);
+
+-- Criando a tabela de Jogadores (relação 1-N)
+CREATE TABLE Jogadores (
+    id INT PRIMARY KEY,
+    time_id INT NOT NULL,
+    nome_jogador VARCHAR(100),
+    posicao VARCHAR(50),
+    numero_camisa INT,
+    FOREIGN KEY (time_id) REFERENCES Times(id)
+);
+
+-- Inserindo dados nos Times
+INSERT INTO Times (id, nome, cidade, ano_fundacao) VALUES
+(1, 'Flamengo', 'Rio de Janeiro', 1895),
+(2, 'Corinthians', 'São Paulo', 1910),
+(3, 'Palmeiras', 'São Paulo', 1914);
+
+-- Inserindo dados nos Jogadores
+INSERT INTO Jogadores (id, time_id, nome_jogador, posicao, numero_camisa) VALUES
+(101, 1, 'Pedro', 'Atacante', 9),
+(102, 1, 'Arrascaeta', 'Meio-campo', 14),
+(103, 1, 'Léo Pereira', 'Zagueiro', 4),
+(201, 2, 'Yuri Alberto', 'Atacante', 9),
+(202, 2, 'Róger Guedes', 'Atacante', 14),
+(203, 2, 'Hugo Souza', 'Goleiro', 1),
+(301, 3, 'Endrick', 'Atacante', 16),
+(302, 3, 'Raphael Veiga', 'Meio-campo', 23),
+(303, 3, 'Weverton', 'Goleiro', 21);
+
+-- Consultando Times com seus Jogadores (JOIN)
+SELECT 
+    t.nome AS time,
+    j.nome_jogador,
+    j.posicao,
+    j.numero_camisa
+FROM Times t
+INNER JOIN Jogadores j ON t.id = j.time_id
+ORDER BY t.nome, j.nome_jogador;
