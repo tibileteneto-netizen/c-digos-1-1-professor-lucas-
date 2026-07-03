@@ -1,0 +1,37 @@
+-- Criando a tabela de Times
+CREATE TABLE Times (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cidade VARCHAR(100),
+    ano_fundacao INT
+);
+
+-- Criando a tabela de Estádios (relação 1-1)
+CREATE TABLE Estadios (
+    id INT PRIMARY KEY,
+    time_id INT UNIQUE NOT NULL,  -- UNIQUE garante que cada time tenha apenas 1 estádio
+    nome_estadio VARCHAR(100),
+    capacidade INT,
+    FOREIGN KEY (time_id) REFERENCES Times(id)
+);
+
+-- Inserindo dados nos Times
+INSERT INTO Times (id, nome, cidade, ano_fundacao) VALUES
+(1, 'Flamengo', 'Rio de Janeiro', 1895),
+(2, 'Corinthians', 'São Paulo', 1910),
+(3, 'Palmeiras', 'São Paulo', 1914);
+
+-- Inserindo dados nos Estádios
+INSERT INTO Estadios (id, time_id, nome_estadio, capacidade) VALUES
+(1, 1, 'Maracanã', 78000),
+(2, 2, 'Neo Química Arena', 49000),
+(3, 3, 'Allianz Parque', 43000);
+
+-- Consultando Times com seus Estádios (JOIN)
+SELECT 
+    t.nome AS time,
+    t.cidade,
+    e.nome_estadio AS estadio,
+    e.capacidade
+FROM Times t
+INNER JOIN Estadios e ON t.id = e.time_id;
