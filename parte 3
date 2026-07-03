@@ -1,0 +1,65 @@
+-- Criando a tabela de Times (se ainda não existir)
+CREATE TABLE Times (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL
+);
+
+-- Criando a tabela de Campeonatos
+CREATE TABLE Campeonatos (
+    id INT PRIMARY KEY,
+    nome_campeonato VARCHAR(100) NOT NULL
+);
+
+-- Criando a Tabela Pivô (resolve a relação N-N)
+CREATE TABLE Times_Campeonatos (
+    time_id INT NOT NULL,
+    campeonato_id INT NOT NULL,
+    ano_temporada INT,
+    PRIMARY KEY (time_id, campeonato_id, ano_temporada),  -- Chave composta
+    FOREIGN KEY (time_id) REFERENCES Times(id),
+    FOREIGN KEY (campeonato_id) REFERENCES Campeonatos(id)
+);
+
+-- Inserindo dados nos Times
+INSERT INTO Times (id, nome) VALUES
+(1, 'Flamengo'),
+(2, 'Palmeiras'),
+(3, 'Corinthians'),
+(4, 'São Paulo');
+
+-- Inserindo dados nos Campeonatos
+INSERT INTO Campeonatos (id, nome_campeonato) VALUES
+(10, 'Brasileirão'),
+(20, 'Libertadores'),
+(30, 'Copa do Brasil');
+
+-- Inserindo dados na Tabela Pivô
+INSERT INTO Times_Campeonatos (time_id, campeonato_id, ano_temporada) VALUES
+(1, 10, 2026),  -- Flamengo no Brasileirão
+(1, 20, 2026),  -- Flamengo na Libertadores
+(1, 30, 2026),  -- Flamengo na Copa do Brasil
+(2, 10, 2026),  -- Palmeiras no Brasileirão
+(2, 20, 2026),  -- Palmeiras na Libertadores
+(3, 10, 2026),  -- Corinthians no Brasileirão
+(3, 30, 2026),  -- Corinthians na Copa do Brasil
+(4, 10, 2026);  -- São Paulo no Brasileirão
+
+-- Consultando Times com seus Campeonatos (JOIN triplo)
+SELECT 
+    t.nome AS time,
+    c.nome_campeonato AS campeonato,
+    tc.ano_temporada
+FROM Times t
+INNER JOIN Times_Campeonatos tc ON t.id = tc.time_id
+INNER JOIN Campeonatos c ON tc.campeonato_id = c.id
+ORDER BY t.nome, c.nome_campeonato;
+
+-- Consultando Campeonatos com seus Times (visão inversa)
+SELECT 
+    c.nome_campeonato AS campeonato,
+    t.nome AS time,
+    tc.ano_temporada
+FROM Campeonatos c
+INNER JOIN Times_Campeonatos tc ON c.id = tc.campeonato_id
+INNER JOIN Times t ON tc.time_id = t.id
+ORDER BY c.nome_campeonato, t.nome;
